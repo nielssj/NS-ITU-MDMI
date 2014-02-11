@@ -134,3 +134,29 @@ prsd = df["prog_skill"].describe()
 print("\nFive-number summary of programming skills")
 print("Min\t\tQ1\t\tMedian\tQ3\t\tMax")
 print("{0:.3f}\t{1:.3f}\t{2:.3f}\t{3:.3f}\t{4:.3f}".format(prsd["min"], prsd["25%"], prsd["50%"], prsd["75%"], prsd["max"]))
+
+
+# Correlation analysis (Numerical data)
+
+# Correlation between age and programming skill
+age = df["age"]
+prs = df["prog_skill"]
+var_sum = ((age - age.mean()) * (prs - prs.mean())).sum()
+corr = var_sum / (len(age) * age.std() * prs.std())
+print("\nCorrelation between age and programming skill")
+print("Manual Pearson: {0:.5f}".format(corr))
+print("Pandas Pearson: {0:.5f}".format(age.corr(prs, method="pearson")))
+print("Kendall:\t\t{0:.5f}".format(age.corr(prs, method="kendall")))
+print("Spearman:\t\t{0:.5f}".format(age.corr(prs, method="spearman")))
+
+# Correlation between age and english level
+age = df["age"]
+englvl = df["english_level"]
+print("\nCorrelation between age and english level")
+print("Pandas Pearson: {0:.5f}".format(age.corr(englvl, method="pearson")))
+
+# Correlation between programming skill and english level
+prs = df["prog_skill"]
+englvl = df["english_level"]
+print("\nCorrelation between programming skill and english level")
+print("Pandas Pearson: {0:.5f}".format(prs.corr(englvl, method="pearson")))
