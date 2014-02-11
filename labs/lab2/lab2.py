@@ -2,16 +2,18 @@ import csv
 import re
 
 
-f_in = open("Data_Mining_Student_DataSet_Spring_2013.csv", "r")
+f_in = open("Data_Mining_Student_DataSet_Spring_2013_Fixed.csv", "r")
 reader = csv.reader(f_in, delimiter = ";")
 
 # Read header
 headers = reader.next()
+headers[0] = headers[0].strip("\xef\xbb\xbf") 
 column = {}
 for h in headers:
-	column[h] = []
+	if(h != ""):
+		column[h] = []
 
-hlen = len(headers)
+hlen = len(headers)-1 # The minus 1 is because the header for some reason has an extra semicolon
 for row in reader:
 	# Correct number of values? (Otherwise discard)
 	if (len(row) != hlen):
@@ -37,7 +39,6 @@ for val in column["prog_skill"]:
 		continue
 	prog_clean.append(-1)
 column["prog_skill"] = prog_clean
-
 print("\nCleaned programming skill values:")
 print(prog_clean)
 
