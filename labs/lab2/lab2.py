@@ -2,7 +2,7 @@ import csv
 import re
 
 
-f_in = open("Lab 2 - Preprocessing/Data_Mining_Student_DataSet_Spring_2013.csv", "r")
+f_in = open("Data_Mining_Student_DataSet_Spring_2013.csv", "r")
 reader = csv.reader(f_in, delimiter = ";")
 
 # Read header
@@ -40,10 +40,6 @@ column["prog_skill"] = prog_clean
 
 print("\nCleaned programming skill values:")
 print(prog_clean)
-
-
-print()
-print(column["english_level"])
 
 # Clean "english_level"
 english_clean = []
@@ -120,47 +116,42 @@ print("\nDecimal scaled english levels:")
 print(column["english_level"])
 
 
-# Mean prog_skill
+
+# Central tendencies of prog_skill (Mean/Median/Mode)
 prog_sum = 0
 for val in prog_skill:
 	prog_sum += val
+prog_mean = prog_sum / len(prog_skill)			# Mean
 
-prog_mean = prog_sum / len(prog_skill)
-print("\nMean of programming skill:")
-print(prog_mean)
-
-# Median prog_skill
 prog_sorted = sorted(prog_skill)
-print("Median of programming skill:")
-print(prog_sorted[len(prog_sorted)/2])
+prog_median = prog_sorted[len(prog_sorted)/2] 	# Median
 
-# Mode of prog_skill
 prog_freq = dict()
 for val in prog_skill:
 	if(val in prog_freq):
 		prog_freq[val] = prog_freq[val] + 1
 	else:
 		prog_freq[val] = 1
-
 freqk = -1
 freqm = 0
 for key, val in enumerate(prog_freq):
 	if(val > freqm):
 		freqk = key
 		freqm = val
+prog_mode = freqk								# Mode
 
-print("Mode of programming skill:")
-print(freqk)
+print("\nCentral tendencies of programming skills")
+print("Mean\tMedian\tMode")
+print("{0:.3f}\t{1:.3f}\t{2:.3f}".format(prog_mean, prog_median, prog_mode))
+
 
 # Five-number summary
 N = len(prog_sorted)
-print("\nFive-number summary of programming skills\nMin")
-print(prog_sorted[0])
-print("Q1")
-print(prog_sorted[N/4])
-print("Median")
-print(prog_mean)
-print("Q3")
-print(prog_sorted[N/4 * 3])
-print("Max")
-print(prog_sorted[N-1])
+print("\nFive-number summary of programming skills")
+fn_min = prog_sorted[0]						# Minimum
+fn_q1 = prog_sorted[N/4]					# Q1
+fn_med = prog_sorted[len(prog_sorted)/2]	# Median
+fn_q3 = prog_sorted[N/4 * 3]				# Q3
+fn_max = prog_sorted[N-1]					# Maximum
+print("Min\t\tQ1\t\tMedian\tQ3\t\tMax")
+print("{0:.3f}\t{1:.3f}\t{2:.3f}\t{3:.3f}\t{4:.3f}".format(fn_min, fn_q1, fn_med, fn_q3, fn_max))
