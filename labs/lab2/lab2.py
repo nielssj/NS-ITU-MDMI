@@ -22,6 +22,19 @@ for row in reader:
 	for h, v in zip(headers, row):
 		column[h].append(v)
 
+# Clean "age"
+age_clean = []
+for val in column["age"]:
+	# Is it a real value?
+	match_c = re.search("\d\d", val)
+	if (match_c != None):
+		age_clean.append(int(float(match_c.group(0))))
+		continue
+	age_clean.append(-1)
+column["age"] = age_clean
+print("\nCleaned age values:")
+print(age_clean)
+
 # Clean "prog_skill"
 prog_clean = []
 for val in column["prog_skill"]:
