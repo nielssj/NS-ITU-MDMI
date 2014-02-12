@@ -95,6 +95,38 @@ print("\nCleaned animal value:")
 print(df["animal"].values)
 
 
+# Clean "winter_tired"
+winter_clean = []
+for val in df["winter_tired"]:
+	lower = val.lower()
+	if ("yes" in lower):
+		winter_clean.append(True)
+	elif ("no" in lower):
+		winter_clean.append(False)
+	else:
+		winter_clean.append(None)
+df["winter_tired"] = winter_clean
+
+print("\nCleaned winter_tired values:")
+print(df["winter_tired"].values)
+
+
+# Clean "more_dk_mnts"
+mnts_clean = []
+for val in df["more_dk_mnts"]:
+	lower = val.lower()
+	if ("yes" in lower):
+		mnts_clean.append(True)
+	elif ("no" in lower):
+		mnts_clean.append(False)
+	else:
+		mnts_clean.append(None)
+df["more_dk_mnts"] = mnts_clean
+
+print("\nCleaned more_dk_mnts values:")
+print(df["more_dk_mnts"].values)
+
+
 # "Min-max normalize" programming skill
 prs = df["prog_skill"]
 prog_normal = ( (prs - prs.min()) / (prs.max() - prs.min()) ) * (1 - 0) + 0 # Yes, I know the last bit is pointless for 0-1 min, but just for personal notes
@@ -160,3 +192,50 @@ prs = df["prog_skill"]
 englvl = df["english_level"]
 print("\nCorrelation between programming skill and english level")
 print("Pandas Pearson: {0:.5f}".format(prs.corr(englvl, method="pearson")))
+
+
+# Correlation analysis (Nominal data)
+
+# Correlation between wanting more mountains and disliking winther
+print("\nCorrelation between wanting more mountains and disliking winther")
+
+# Filter down to rows with valid values in both attributes
+df2 = df[(df["more_dk_mnts"] == True) | (df["more_dk_mnts"] == False)]
+df2 = df2[(df2["winter_tired"] == True) | (df2["winter_tired"] == False)]
+N = df2["more_dk_mnts"].count()
+
+# Compute "contingency table"
+ctd = [[0, 0], [0, 0]]
+s_mnts = df2["more_dk_mnts"]
+s_wnt = df2["winter_tired"]
+for (i, mnts) in s_mnts.iteritems():
+	if(mnts == True):
+		if(s_wnt[i] == True):
+			cur = ctd[0][0]
+			ctd[0][0] = cur + 1
+		else:
+			cur = ctd[0][1]
+			ctd[0][1] = cur + 1
+	else:
+		if(s_wnt[i] == True):
+			cur = ctd[1][0]
+			ctd[1][0] = cur + 1
+		else:
+			cur = ctd[1][1]
+			ctd[1][1] = cur + 1
+print("Contingency table: {0}".format(ctd))
+
+# Compute expectancy table
+E_11 = (ctd[0][0] + ctd[0][1]) * (ctd[0][0] + ctd[1][0]) / N
+E_12 = (ctd[0][1] + ctd[1][1]) * (ctd[0][1] + ctd[0][0]) / N
+E_21 = (ctd[1][0] + ctd[1][1]) * (ctd[1][0] + ctd[0][0]) / N
+E_22 = (ctd[1][1] + ctd[1][0]) * (ctd[1][1] + ctd[0][1]) / N
+exp = [[E_11, E_12], [E_21, E_22]]
+print("Expectancy table: {0}".format(exp))
+
+# Compute chi-squared
+X2 = 0
+for i in range(0, 2):
+	for j in range(0, 2):
+		X2 += ((ctd[i][j] - exp[i][j]) ^ 2) / exp[i][j]
+print("Chi-squared: {0}".format(X2))
