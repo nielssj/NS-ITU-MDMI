@@ -110,7 +110,29 @@ def createDTree(df, cl):
 	return node
 
 
+# Classify one or more records
+def classify(rcs, cl, root):
+	res = dict()
+	for i in range(0, len(rcs[root.label])):
+		n_cur = root
+		while(len(n_cur.children) > 0):
+			n_cur = n_cur.children[rcs[n_cur.label][i]]
+		res[i] = n_cur.label
+	return res
+
+
+training = df[2:]
+
+attrs = set(df.columns)
+attrs.remove("buys_computer")
+test = df[list(attrs)][:2]
+test = test.to_dict()
+
 graph = pydot.Dot(graph_type='graph')
 root = createDTree(training, "buys_computer")
 root.makeDotGraph(graph)
 graph.write_png("example1.png")
+
+classifcations = classify(test, "buys_computer", root)
+test["buys_computer"] = classifcations
+print(test)
