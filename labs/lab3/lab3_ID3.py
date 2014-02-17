@@ -75,15 +75,15 @@ def attr_selection(df, cl, attrs):
 class Node:
 	def __init__(self, label):
 		self.label = label
-		self.children = []
+		self.children = dict()
 	def addChild(self, child, label):
-		self.children.append((label,child))
+		self.children[label] = child
 	def makeDotGraph(self, graph):
 		node = pydot.Node(self.label)
 		graph.add_node(node)
-		for c in self.children:
-			c_node = c[1].makeDotGraph(graph)
-			c_edge = pydot.Edge(node, c_node, label=c[0])
+		for edge in self.children:
+			c_node = self.children[edge].makeDotGraph(graph)
+			c_edge = pydot.Edge(node, c_node, label=edge)
 			graph.add_edge(c_edge)
 		return node
 
@@ -111,6 +111,6 @@ def createDTree(df, cl):
 
 
 graph = pydot.Dot(graph_type='graph')
-root = createDTree(df, "buys_computer")
+root = createDTree(training, "buys_computer")
 root.makeDotGraph(graph)
 graph.write_png("example1.png")
