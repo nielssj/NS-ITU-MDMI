@@ -89,7 +89,8 @@ class Node:
 
 
 # Create decision tree (ID3)
-def createDTree(df, cl, attrs):
+def createDTree(df, cl):
+	attrs = set(df.columns)
 	if(len(df.groupby(cl)) == 1):
 		# All tuples are the same class, returning leaf
 		classcol = df["buys_computer"]
@@ -104,12 +105,12 @@ def createDTree(df, cl, attrs):
 	attrs.remove(split_attr)
 	node = Node(split_attr)
 	for group in df.groupby(split_attr):
-		childnode = createDTree(group[1][list(attrs)], cl, attrs)
+		childnode = createDTree(group[1][list(attrs)], cl)
 		node.addChild(childnode, group[0])
 	return node
 
 
 graph = pydot.Dot(graph_type='graph')
-root = createDTree(df, "buys_computer", set(df.columns))
+root = createDTree(df, "buys_computer")
 root.makeDotGraph(graph)
 graph.write_png("example1.png")
