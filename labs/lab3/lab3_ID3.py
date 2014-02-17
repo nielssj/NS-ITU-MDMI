@@ -63,7 +63,6 @@ def attr_selection(df, cl, attrs):
 	for attr in attrs:
 		if(attr != cl):
 			g = gain(df, cl, attr)
-			print ("Gain({0}) = {1}".format(attr, g))
 			if(g > g_high_val):
 				g_high_val = g
 				g_high_attr = attr
@@ -92,20 +91,19 @@ class Node:
 # Create decision tree (ID3)
 def createDTree(df, cl, attrs):
 	if(len(df.groupby(cl)) == 1):
+		# All tuples are the same class, returning leaf
 		classcol = df["buys_computer"]
 		domin = classcol[classcol.index[0]]
-		print("All tuples are of the same class ({0}), returning leaf".format(domin))
 		return Node(domin)
 	if(len(attrs) == 0):
+		# No more attributes to select from, returning leaf with majority
 		major = majority(df, cl)
-		print("No more attributes to select from, returning leaf with majority ({0})".format(major))
 		return Node(major)
-	split_attr = attr_selection(df, cl, attrs)
+	# Splitting on attribute, running recursively on resulting partitions
+	split_attr = attr_selection(df, cl, attrs)	# Pick attribute with highest gain
 	attrs.remove(split_attr)
 	node = Node(split_attr)
-	print("Chose to split on attribute \"{0}\"".format(split_attr))
 	for group in df.groupby(split_attr):
-		print("Running recursively on partition \"{0}\"".format(group[0]))
 		childnode = createDTree(group[1][list(attrs)], cl, attrs)
 		node.addChild(childnode, group[0])
 	return node
