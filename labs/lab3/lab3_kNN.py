@@ -3,18 +3,18 @@ import Queue
 
 
 # Calculate distance from every item in training set (Added as a new column)
-def distance(data, a):
+def distance(data, a, cl):
 	data["distance"] = 0
 	for col in data.columns:
-		if (col != "distance"):
-			col_score = data[col].apply(lambda x: 1 if (x == a[col][0]) else 0)
+		if (col != "distance" and col != cl):
+			col_score = data[col].apply(lambda x: 1 if (x == a[col]) else 0)
 			data["distance"] = data["distance"] + col_score
 	return data
 
 # Classify a single item using k-nearest-neighbors algorithm
 def kNN(data, cl, k, a):
 	# Calculate distance
-	data = distance(data, a)
+	data = distance(data, a, cl)
 
 	# Take k nearest neighbors
 	data = data.sort("distance")
@@ -30,13 +30,35 @@ def kNN(data, cl, k, a):
 # Mushroom example run
 f_in2 = open("agaricus-lepiotadata_wheader.txt", "r")
 df = pandas.read_csv(f_in2, sep=",")
-training = df[1:]
-test = df[:1]
-k = 5
+T = 2950
+training = df[:T]	# Use first T records for training
+test = df[T:]		# Use the rest for testing
+k = 10
 
-result = kNN(training, "class", k, test.to_dict(outtype = "list"))
+# Calculate confusion matrix for test run
+tp = 0
+fn = 0
+fp = 0
+tn = 0
+for i, val in test.iterrows():
+	correct = val["class"]
+	result = kNN(training, "class", k, val)
+	if(result == "e"):
+		if(result == correct):
+			tp = tp + 1
+		else:
+			fp = fp + 1
+	else:
+		if(result == correct):
+			tn = tn + 1
+		else:
+			fn = fn + 1
 
-if(result == "e"):
-	print("Congratulations, the mushroom is edible!")
-else:
-	print("Dude, don't eat that..")
+pos_rec = 100-(100*fn/float(tp))
+neg_rec = 100-(100*fp/float(tn))
+total_rec = 100-(100*(fn+fp)/float(tp+tn))
+
+print("classes\t\tedible\tposinous\ttotal\trecognition(%)")
+print("edible\t\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(tp, fn,tp+fn,pos_rec))
+print("posinous\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(fp, tn, fp+tn,neg_rec))
+print("total\t\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(tp+fp, fn+tn, tp+fp+fn+tn, total_rec))
