@@ -2,41 +2,41 @@ import pandas
 import Queue
 
 
+# Calculate distance from every item in training set (Added as a new column)
+def distance(data, a):
+	data["distance"] = 0
+	for col in data.columns:
+		if (col != "distance"):
+			col_score = data[col].apply(lambda x: 1 if (x == a[col][0]) else 0)
+			data["distance"] = data["distance"] + col_score
+	return data
+
+# Classify a single item using k-nearest-neighbors algorithm
+def kNN(data, cl, k, a):
+	# Calculate distance
+	data = distance(data, a)
+
+	# Take k nearest neighbors
+	data = data.sort("distance")
+	neighbors = data.tail(k)
+
+	# Determine highest represented class in neighbors
+	gb = neighbors.groupby(cl)
+	gb_s = gb.size()
+	gb_s.order()
+	return gb_s.head(1).keys()[0]
+
+
+# Mushroom example run
 f_in2 = open("agaricus-lepiotadata_wheader.txt", "r")
 df = pandas.read_csv(f_in2, sep=",")
-
-def compare(df, a, b):
-	score = 0
-	for col in df.columns:
-		if(df[col][a] == df[col][b]):
-			score = score + 1
-	return score
-
-
-def kNN(df, cl, k):
-	close = []
-	for i in range(2, len(df)):
-		val = compare(df, 1, i)
-		if(len(close) < k):
-			close.append((val, i, df[cl][i]))
-		else:
-			close = sorted(close)
-			if(val > close[0][0]):
-				close[0] = (val, i, df[cl][i])
-	return close
-
-def classify(df, cl, k):
-	closest = kNN(df, cl, k)
-	score = 0
-	for n in closest:
-		if(n[2] == "e"):
-			score = score + 1
-	return score
-
+training = df[1:]
+test = df[:1]
 k = 5
-score = classify(df, "class", k)
 
-if(score > k/2):
+result = kNN(training, "class", k, test.to_dict(outtype = "list"))
+
+if(result == "e"):
 	print("Congratulations, the mushroom is edible!")
 else:
 	print("Dude, don't eat that..")
