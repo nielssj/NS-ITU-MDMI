@@ -93,7 +93,7 @@ def createDTree(df, cl):
 	attrs = set(df.columns)
 	if(len(df.groupby(cl)) == 1):
 		# All tuples are the same class, returning leaf
-		classcol = df["buys_computer"]
+		classcol = df[cl]
 		domin = classcol[classcol.index[0]]
 		return Node(domin)
 	if(len(attrs) == 0):
@@ -121,18 +121,26 @@ def classify(rcs, cl, root):
 	return res
 
 
-training = df[2:]
+# training = df[2:]
 
-attrs = set(df.columns)
-attrs.remove("buys_computer")
-test = df[list(attrs)][:2]
-test = test.to_dict()
+# attrs = set(df.columns)
+# attrs.remove("buys_computer")
+# test = df[list(attrs)][:2]
+# test = test.to_dict()
 
+# graph = pydot.Dot(graph_type='graph')
+# root = createDTree(training, "buys_computer")
+# root.makeDotGraph(graph)
+# graph.write_png("example1.png")
+
+# classifcations = classify(test, "buys_computer", root)
+# test["buys_computer"] = classifcations
+# print(test)
+
+
+f_in = open("agaricus-lepiotadata_wheader.txt", "r")
+df2 = pandas.read_csv(f_in, sep=",")
 graph = pydot.Dot(graph_type='graph')
-root = createDTree(training, "buys_computer")
+root = createDTree(df2, "class")
 root.makeDotGraph(graph)
-graph.write_png("example1.png")
-
-classifcations = classify(test, "buys_computer", root)
-test["buys_computer"] = classifcations
-print(test)
+graph.write_png("example2.png")
