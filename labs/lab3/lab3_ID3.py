@@ -89,7 +89,7 @@ class Node:
 
 
 # Create decision tree (ID3)
-def createDTree(df, cl):
+def generateDecisionTree(df, cl):
 	attrs = set(df.columns)
 	if(len(df.groupby(cl)) == 1):
 		# All tuples are the same class, returning leaf
@@ -105,7 +105,7 @@ def createDTree(df, cl):
 	attrs.remove(split_attr)
 	node = Node(split_attr)
 	for group in df.groupby(split_attr):
-		childnode = createDTree(group[1][list(attrs)], cl)
+		childnode = generateDecisionTree(group[1][list(attrs)], cl)
 		node.addChild(childnode, group[0])
 	return node
 
@@ -129,7 +129,7 @@ def classify(rcs, cl, root):
 # test = test.to_dict()
 
 # graph = pydot.Dot(graph_type='graph')
-# root = createDTree(training, "buys_computer")
+# root = generateDecisionTree(training, "buys_computer")
 # root.makeDotGraph(graph)
 # graph.write_png("example1.png")
 
@@ -140,7 +140,9 @@ def classify(rcs, cl, root):
 
 f_in = open("agaricus-lepiotadata_wheader.txt", "r")
 df2 = pandas.read_csv(f_in, sep=",")
+
+root = generateDecisionTree(df2, "class")
+
 graph = pydot.Dot(graph_type='graph')
-root = createDTree(df2, "class")
 root.makeDotGraph(graph)
 graph.write_png("example2.png")
