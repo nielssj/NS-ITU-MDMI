@@ -80,13 +80,22 @@ def confusionMatrix(results):
 				tn = tn + 1
 			else:
 				fn = fn + 1		
-	pos_rec = 100-(100*fn/float(tp))
-	neg_rec = 100-(100*fp/float(tn))
+	pos = tp + fp
+	neg = tn + fn
 	total_rec = 100-(100*(fn+fp)/float(tp+tn))
-	print("classes\t\tedible\tposinous\ttotal\trecognition(%)")
-	print("edible\t\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(tp, fn,tp+fn,pos_rec))
-	print("posinous\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(fp, tn, fp+tn,neg_rec))
+	sens = 100 * float(tp)/pos
+	spec = 100 * float(tn)/neg
+	prec = 100 * float(tp)/(tp + fp)
+	acc = sens * pos / (pos + neg) + spec * neg / (pos + neg)
+	print("\nclasses\t\tedible\tposinous\ttotal\trecognition(%)")
+	print("edible\t\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(tp, fn,tp+fn,sens))
+	print("posinous\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(fp, tn, fp+tn,spec))
 	print("total\t\t{0}\t\t{1}\t\t\t{2}\t\t{3:.2f}".format(tp+fp, fn+tn, tp+fp+fn+tn, total_rec))
+	print("------------------------------------------------")
+	print("sensivity:\t\t{0:.2f}".format(sens))
+	print("specificity:\t{0:.2f}".format(spec))
+	print("precision:\t\t{0:.2f}".format(prec))
+	print("accuracy:\t\t{0:.2f}".format(acc))
 
 # Mushroom example run
 f_in2 = open("agaricus-lepiotadata_wheader.txt", "r")
