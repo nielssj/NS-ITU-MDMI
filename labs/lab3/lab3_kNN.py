@@ -1,4 +1,5 @@
 import pandas
+import numpy
 import Queue
 
 
@@ -26,18 +27,41 @@ def kNN(data, cl, k, a):
 	gb_s.order()
 	return gb_s.head(1).keys()[0]
 
-
-# Conduction test using holdout method (single partition split into training/test data)
-def holdoutTest(data, split, k):
+def testRun(train, test, k):
 	results = []
-	training = data[:split]	# Use first T records for training
-	test = data[split:]		# Use the rest for testing
 	for i, val in test.iterrows():
 		correct = val["class"]
-		result = kNN(training, "class", k, val)
+		result = kNN(train, "class", k, val)
 		results.append((val["class"],result))
 		print("Prediction: {0} (actual: {1})".format(result, correct))
 	return results
+
+
+# Conduct test using holdout method (single partition split into training/test data)
+def holdoutTest(data, split, k):
+	test_i = numpy.random.choice(data.index, split, replace=False)
+	test = data.ix[test_i]		# Use T random records for test
+	train = data.drop(test_i)	# Use the rest for training
+	return testRun(train, test, k)
+
+# Conduct test using cross-validation method  (Randomly partition and rotate which one is test set)
+def crossValidation(data, p, k):
+	# Divide into random partitions
+	parts = []
+	rs = len(data)/p
+	for i in range(0, p):
+		ri = numpy.random.choice(data.index, size=rs, replace=False)
+		parts.append(data.ix[ri])
+		data = data.drop(ri)
+	# Perform test rotating which partition is the test set
+	results = []
+	for i, part in enumerate(parts):
+		train = pandas.concat(parts[:i] + parts[(i+1):])
+		test = parts[i]
+		p_results = testRun(train, test, k)
+		results.append(p_results)
+	return numpy.concatenate(results)
+
 
 # Calculate and print confusion matrix
 def confusionMatrix(results):
@@ -67,5 +91,6 @@ def confusionMatrix(results):
 # Mushroom example run
 f_in2 = open("agaricus-lepiotadata_wheader.txt", "r")
 df = pandas.read_csv(f_in2, sep=",")
-results = holdoutTest(df[:100], 50, 10)
+results = crossValidation(df[:100], 10, 10)
+#results = holdoutTest(df[:100], 33, 10)
 confusionMatrix(results)
