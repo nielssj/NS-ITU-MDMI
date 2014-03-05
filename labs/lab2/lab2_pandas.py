@@ -224,6 +224,7 @@ for (i, mnts) in s_mnts.iteritems():
 			cur = ctd[1][1]
 			ctd[1][1] = cur + 1
 print("Contingency table: {0}".format(ctd))
+print(df2.apply(lambda x: x["more_dk_mnts"] == True and x["winter_tired"] == True, axis=1))
 
 # Compute expectancy table
 E_11 = (ctd[0][0] + ctd[0][1]) * (ctd[0][0] + ctd[1][0]) / N
