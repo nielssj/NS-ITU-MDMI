@@ -1,9 +1,5 @@
 import itertools
 
-#trs = [ [1, 2, 3, 4, 5 ], [ 1, 3, 5 ], [ 2, 3, 5 ], [ 1, 5 ], [ 1, 3, 4 ], [ 2, 3, 5 ], [ 2, 3, 5 ], [ 3, 4, 5 ], [ 4, 5 ], [ 2 ], [ 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ] ];
-trs = [[1, 2, 5], [2, 4], [2, 3], [1, 2, 4], [1, 3], [2, 3], [1, 3], [1, 2, 3, 5], [1, 2, 3]]
-print(trs)
-
 def apriori(trs, st):
 	li = generateFreqItemSets1(trs, st)
 	li_cur = li
@@ -92,5 +88,6 @@ def generateFreqItemSets(trs, st, li):
 
 	return c_filtered
 
+trs = [ [1, 2, 3, 4, 5 ], [ 1, 3, 5 ], [ 2, 3, 5 ], [ 1, 5 ], [ 1, 3, 4 ], [ 2, 3, 5 ], [ 2, 3, 5 ], [ 3, 4, 5 ], [ 4, 5 ], [ 2 ], [ 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ] ];
 result = apriori(trs, 2)
 print("result: {0}".format(result))
