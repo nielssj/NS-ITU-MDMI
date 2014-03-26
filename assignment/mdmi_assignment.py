@@ -53,18 +53,37 @@ for val in columns["EngSkill"]:
 	except exceptions.ValueError:
 		eng.append(-1)
 
+# Clean programming skill column
+prog = []
+for val in columns["prog_skill"]:
+	try:
+		prog.append(float(val))
+	except exceptions.ValueError:
+		prog.append(-1)
+
+# Clean uni years column
+uni = []
+for val in columns["uni_yrs"]:
+	try:
+		uni.append(float(val))
+	except exceptions.ValueError:
+		uni.append(-1)
+
 # Plot english skill vs. age
 xaxis = []
 yaxis = []
 for i, val in enumerate(age):
-	if(eng[i] > 0):
+	if(uni[i] > 0 and eng[i] > 0):
 		xaxis.append(val)
-		yaxis.append(eng[i])
+		#xaxis.append(eng[i])
+		#yaxis.append(eng[i])
+		#yaxis.append(prog[i])
+		yaxis.append(uni[i])
 plt.plot(xaxis, yaxis, "ro")
-plt.axis([15,50,40,80])
-plt.ylabel('English Skill')
+#plt.axis([15,50,40,80])
+plt.ylabel('Programming skill')
 plt.xlabel('Age')
-#plt.show()
+plt.show()
 
 print(columns["progLangs"])
 
