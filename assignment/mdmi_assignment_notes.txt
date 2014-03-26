@@ -1,0 +1,32 @@
+Columns cleaned:
+	OS (mac/osx/linux)
+
+Candidate columns:
+	More mountains in DK
+	Favorite SQL Server
+	Tired of Winter?
+	English skill
+	Programming skill
+	Programming langs
+	Know SQL?
+	Favorite Color
+	Age
+	Favorite Animal
+	University years
+
+
+2 preprocessing methods
+
+1 frequent pattern mining method
+ - apriori 
+ 	- programming language, if C# then java?
+ 	- more mountains -> tired of winter?
+
+1 clustering method
+ - kmeans
+ 	- engSkill, Age
+
+1 supervised learning method
+ - ID3
+ 	- FavSQL, KnowSQL, progSkill -> OS
+ 	- Prog lang -> OS
