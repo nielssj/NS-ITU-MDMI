@@ -106,12 +106,17 @@ for val in columns["progLangs"]:
 
 # Create list of sets for languages
 setLang = []
-for val in columns["progLangs"]:
+for i, val in enumerate(columns["progLangs"]):
 	row = []
+	# Add languages
 	for lang in val.split(','):
 		langl = lang.lower().lstrip()
 		if(langl in langfreqkey):
 			row.append(langl)
+	# Add OS
+	if (not oss[i] == "-"):
+		row.append(oss[i])
+	# Add if all data good
 	if(len(row) > 0):
 		setLang.append(row)
 
@@ -119,6 +124,23 @@ print(langfreqkey)
 for row in setLang:
 	print(row)
 
-apriori.apriori(setLang, 10)
+apriori.apriori(setLang, 20)
 
-# TODO: Do verification (compute lift)
+# Verification (compute lift)
+A = 0
+B = 0
+AB = 0
+count = float(len(setLang))
+for row in setLang:
+	Abool = "c#" in row
+	Bbool = "win" in row
+	if(Abool):
+		A = A + 1
+	if(Bbool):
+		B = B + 1
+	if(Abool and Bbool):
+		AB = AB + 1
+
+lift = (AB / count) / ((A/count) * (B/count))
+print("A: {0}, B: {1}, AB: {2}".format(A, B, AB))
+print("lift(A,B) = {0}".format(lift))
