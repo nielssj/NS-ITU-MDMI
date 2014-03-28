@@ -4,6 +4,16 @@ import re
 import exceptions
 import matplotlib.pyplot as plt
 import apriori
+import kmeans
+
+
+
+########################################
+#
+#	READ & PARSE
+#
+########################################
+
 
 f_in = open("data_mining_2014_dataset.csv", "r")
 reader = csv.reader(f_in, delimiter=';')
@@ -22,8 +32,12 @@ for row in reader:
 			columns[key].append(value)
 
 
-#for key in columns.keys():
-#	print("{0}: {1}".format(key, columns[key]))
+
+########################################
+#
+#	PREPROCESSING / CLEANING
+#
+########################################
 
 # Clean the OS column
 oss = []
@@ -69,23 +83,13 @@ for val in columns["uni_yrs"]:
 	except exceptions.ValueError:
 		uni.append(-1)
 
-# Plot english skill vs. age
-xaxis = []
-yaxis = []
-for i, val in enumerate(age):
-	if(uni[i] > 0 and eng[i] > 0):
-		xaxis.append(val)
-		#xaxis.append(eng[i])
-		#yaxis.append(eng[i])
-		#yaxis.append(prog[i])
-		yaxis.append(uni[i])
-plt.plot(xaxis, yaxis, "ro")
-#plt.axis([15,50,40,80])
-plt.ylabel('Programming skill')
-plt.xlabel('Age')
-plt.show()
 
-print(columns["progLangs"])
+
+########################################
+#
+#	FREQUENT PATTERN MINING (Apriori)
+#
+########################################
 
 # Count language frequencies
 langfreq = dict()
@@ -112,16 +116,6 @@ for lang in langfreq.keys():
 		index = index + 1
 
 print(langfreqc)
-
-# Create boolean table for languages
-boolLang = []
-for val in columns["progLangs"]:
-	row = [False] * len(langfreqindex)
-	for lang in val.split(','):
-		langl = lang.lower().lstrip()
-		if(langl in langfreqkey):
-			row[langfreqindex[langl]] = True
-	boolLang.append(row)
 
 # Create list of sets for languages
 setLang = []
@@ -163,3 +157,32 @@ for row in setLang:
 lift = (AB / count) / ((A/count) * (B/count))
 print("A: {0}, B: {1}, AB: {2}".format(A, B, AB))
 print("lift(A,B) = {0}".format(lift))
+
+
+
+###############################
+#
+#	CLUSTERING (K-Means)
+#
+###############################
+
+# Create pairs for clustering (age/eng/prog/uni)
+pairs = []
+for i, val in enumerate(uni):
+	if(val > 0 and prog[i] > 0):
+		pairs.append((val, prog[i]))
+
+# Run k-means
+seeds = [pairs[0], pairs[1], pairs[2]]
+clusters = kmeans.kmeans(pairs, seeds)
+
+# Show diagram with coloured clusters
+for i in clusters:
+	cluster = clusters[i]
+	xaxis = []
+	yaxis = []
+	for pair in cluster:
+		xaxis.append(pair[0])
+		yaxis.append(pair[1])
+	plt.plot(xaxis, yaxis, "o")
+plt.show()
