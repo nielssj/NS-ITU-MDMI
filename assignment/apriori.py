@@ -35,7 +35,11 @@ def countSupport(trs, its):
 					freqs[itemset] = freqs[itemset] + 1
 				else:
 					freqs[itemset] = 1
-	return freqs
+	T = float(len(trs))
+	pcts = dict()
+	for freqkey in freqs.keys():
+		pcts[freqkey] = freqs[freqkey] / T
+	return pcts
 
 # Return list of rows with a support higher than given threshold
 def filterInfrequent(freqs, st):
