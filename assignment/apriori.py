@@ -91,3 +91,22 @@ def generateFreqItemSets(trs, st, li):
 	c_filtered = filterInfrequent(c_support, st)
 
 	return c_filtered
+
+def prob(trs, s):
+	count = 0
+	for tr in trs:
+		if(s in tr):
+			count = count + 1
+	return count / len(trs)
+
+def probSet(trs, ss):
+	count = 0
+	for tr in trs:
+		isIn = True
+		for s in ss:
+			if(s not in tr):
+				isIn = False
+				break
+		if(isIn):
+			count = count + 1
+	return count / len(trs)
