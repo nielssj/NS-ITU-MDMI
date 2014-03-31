@@ -1,3 +1,23 @@
+GUIDELINES FORM LECTURE
+==========================
+
+1) Goal
+2) How?
+3) What is expected?
+4) Why is that expected
+5) Results
+6) Interpret results w.r.t. expected results
+	7) iff different, say why
+	8) _optional_ Describe experiments that can prove/disprove why this is true
+
+
+TIP: Graphs are a great tool
+
+
+
+NOTES
+========
+
 Columns cleaned:
 	OS (mac/osx/linux)
 
