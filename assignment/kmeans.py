@@ -72,13 +72,3 @@ def kmeans(points, seeds):
 		print(means)
 
 	return clusters
-
-# Example from slides
-#seeds = [(2,10), (5,8), (4,9)]
-#points = [(2,10),(2,5),(8,4),(5,8),(7,5),(6,4),(4,9),(1,2)]
-
-# Example from web
-seeds = [(1.0,1.0), (5.0,7.0)]
-points = [(1.0,1.0), (1.5,2.0), (3.0,4.0), (5.0,7.0), (3.5,5.0), (4.5,5.0), (3.5,4.5)]
-
-kmeans(points,seeds)
