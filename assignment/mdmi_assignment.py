@@ -138,7 +138,7 @@ def frequentPattern():
 	for row in setLang:
 		print(row)
 
-	apriori.apriori(setLang, 0.1)
+	print("Result: {0}".format(apriori.apriori(setLang, 0.1)))
 
 	# Verification (compute lift)
 	A = 0
@@ -199,4 +199,4 @@ def clustering():
 
 
 frequentPattern()
-clustering()
+#clustering()

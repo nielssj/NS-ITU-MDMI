@@ -43,20 +43,20 @@ def countSupport(trs, its):
 
 # Return list of rows with a support higher than given threshold
 def filterInfrequent(freqs, st):
-	freqs_st = []
+	freqs_st = dict()
 	for (iset, freq) in freqs.iteritems():
 		if(freq >= st):
-			freqs_st.append(iset)
+			freqs_st[iset] = freq
 	return freqs_st
 
 def generateFreqItemSets(trs, st, li):
 	# Determine k
-	k = len(li[0])
+	k = len(li.iterkeys().next())
 
 	# Join step
 	candidates = []
-	for l1 in li:
-		for l2 in li:
+	for l1 in li.keys():
+		for l2 in li.keys():
 			fail = False
 			for val in range(0, k-2):
 				if(l1[val] != l2[val]):
@@ -78,7 +78,7 @@ def generateFreqItemSets(trs, st, li):
 	for itemset in candidates:
 		invalid = False
 		for subset in itertools.combinations(itemset, k):
-			if(subset not in li):
+			if(subset not in li.keys()):
 				invalid = True
 				break
 		if(not invalid):
