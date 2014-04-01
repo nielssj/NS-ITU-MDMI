@@ -97,7 +97,7 @@ def prob(trs, s):
 	for tr in trs:
 		if(s in tr):
 			count = count + 1
-	return count / len(trs)
+	return count / float(len(trs))
 
 def probSet(trs, ss):
 	count = 0
@@ -109,4 +109,12 @@ def probSet(trs, ss):
 				break
 		if(isIn):
 			count = count + 1
-	return count / len(trs)
+	return count / float(len(trs))
+
+def lift(trs, pattern):
+	k = len(pattern)
+	probA = probSet(trs, pattern[0:len(pattern)-1])
+	probB = prob(trs, pattern[k-1])
+	probAB = probSet(trs, pattern)
+	lift = probAB / (probA * probB)
+	return lift

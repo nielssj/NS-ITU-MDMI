@@ -113,10 +113,7 @@ def frequentPattern():
 			langfreqc[lang] = freq
 			langfreqkey.append(lang)
 			langfreqindex[lang] = index
-			print("{0}: {1}".format(lang, langfreq[lang]))
 			index = index + 1
-
-	print(langfreqc)
 
 	# Create list of sets for languages
 	setLang = []
@@ -134,32 +131,14 @@ def frequentPattern():
 		if(len(row) > 0):
 			setLang.append(row)
 
-	print(langfreqkey)
-	for row in setLang:
-		print(row)
-
-	print("Result: {0}".format(apriori.apriori(setLang, 0.1)))
+	result = apriori.apriori(setLang, 0.2)
+	print("\nLanguage frequencies: {0}".format(langfreqc))
+	print("Frequent Patterns: {0}".format(result))
 
 	# Verification (compute lift)
-	A = 0
-	B = 0
-	AB = 0
-	count = float(len(setLang))
-	for row in setLang:
-		Abool = "c#" in row
-		Bbool = "java" in row
-		if(Abool):
-			A = A + 1
-		if(Bbool):
-			B = B + 1
-		if(Abool and Bbool):
-			AB = AB + 1
-
-	ABSup = AB / count
-	lift = (AB / count) / ((A/count) * (B/count))
-	print("A: {0}, B: {1}, AB: {2}".format(A, B, AB))
-	print("AB Confidence: {0}".format(ABSup))
-	print("lift(A,B) = {0}".format(lift))
+	for (pattern, freq) in result.iteritems():
+		lift = apriori.lift(setLang, pattern)
+		print("Lift{0}: {1}".format(pattern, lift))
 
 
 
