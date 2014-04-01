@@ -65,10 +65,6 @@ def attr_selection(df, cl, attrs):
 				g_high_attr = attr
 	return g_high_attr
 
-
-# Test calculations (depicted on lecture slides)
-#print("Best attribute for splitting is \"{0}\"".format(attr_selection(df, "buys_computer", df.columns)))
-
 class Node:
 	def __init__(self, label):
 		self.label = str(label)
@@ -126,33 +122,3 @@ def classify(rcs, cl, root):
 			n_cur = n_cur.children[rcs[n_cur.label][i]]
 		res[i] = n_cur.label
 	return res
-
-
-# f_in2 = open("buys-computer.txt", "r")
-# df = pandas.read_csv(f_in2, sep=";")
-
-# training = df[2:]
-
-# attrs = set(df.columns)
-# attrs.remove("buys_computer")
-# test = df[list(attrs)][:2]
-# test = test.to_dict()
-
-# graph = pydot.Dot(graph_type='graph')
-# root = generateDecisionTree(training, "buys_computer")
-# root.makeDotGraph(graph)
-# graph.write_png("example1.png")
-
-# classifcations = classify(test, "buys_computer", root)
-# test["buys_computer"] = classifcations
-# print(test)
-
-
-# f_in = open("agaricus-lepiotadata_wheader.txt", "r")
-# df2 = pandas.read_csv(f_in, sep=",")
-
-# root = generateDecisionTree(df2, "class")
-
-# graph = pydot.Dot(graph_type='graph')
-# root.makeDotGraph(graph)
-# graph.write_png("example2.png")
