@@ -5,6 +5,8 @@ import exceptions
 import matplotlib.pyplot as plt
 import apriori
 import kmeans
+import id3
+import pydot
 
 
 
@@ -104,9 +106,9 @@ for val in columns["FavSQLServ"]:
 knowsql = []
 for val in columns["sql"]:
 	if(re.search("yes", val, re.IGNORECASE)):
-		knowsql.append(True)
+		knowsql.append("yes")
 	elif(re.search("no", val, re.IGNORECASE)):
-		knowsql.append(False)
+		knowsql.append("no")
 	else:
 		knowsql.append("-")
 
@@ -210,7 +212,36 @@ def clustering():
 ###################################
 
 def unsupervised():
-	print("hello!")
+	# Create concept hierachy for programming skill
+	prog_ch = []
+	for val in prog:
+		if(val > 0 and val < 4):
+			prog_ch.append("low")
+		elif(val >= 4 and val < 8):
+			prog_ch.append("mid")
+		elif(val >= 8 and val < 12):
+			prog_ch.append("high")
+		else:
+			prog_ch.append("-")
+
+	# Filter rows without any missing in relevant attributes
+	data = dict()
+	data["fav_sql"] = []
+	data["prog_skill"] = []
+	data["os"] = []
+	for i, val in enumerate(knowsql):
+		if(favsql[i] != "-" and oss[i] != "-" and prog_ch[i] != "-"):
+			data["fav_sql"].append(favsql[i])
+			data["prog_skill"].append(prog_ch[i])
+			data["os"].append(oss[i])
+
+	# Generate decision tree (ID3)
+	root = id3.generateDecisionTree(data, "os")
+
+	# Draw tree as dot graph
+	graph = pydot.Dot(graph_type='graph')
+	root.makeDotGraph(graph, ["osx", "win", "linux"])
+	graph.write_png("os_dtree.png")
 
 
 
