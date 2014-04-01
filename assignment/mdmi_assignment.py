@@ -83,7 +83,34 @@ for val in columns["uni_yrs"]:
 	except exceptions.ValueError:
 		uni.append(-1)
 
+# Clean favorite sql server column
+favsql = []
+for val in columns["FavSQLServ"]:
+	if(re.search("ms|microsoft|sql server|sqlserver", val, re.IGNORECASE)):
+		favsql.append("mssql")
+	elif(re.search("mysql", val, re.IGNORECASE)):
+		favsql.append("mysql")
+	elif (re.search("postgres", val, re.IGNORECASE)):
+		favsql.append("postgres")
+	elif (re.search("maria", val, re.IGNORECASE)):
+		favsql.append("mariadb")
+	elif (re.search("oracle", val, re.IGNORECASE)):
+		favsql.append("oracle")
+	elif (re.search("apache", val, re.IGNORECASE)):
+		favsql.append("apache")
+	else:
+		favsql.append("-")
 
+# Clean know sql column
+knowsql = []
+for val in columns["sql"]:
+	if(re.search("yes", val, re.IGNORECASE)):
+		knowsql.append(True)
+	elif(re.search("no", val, re.IGNORECASE)):
+		knowsql.append(False)
+	else:
+		knowsql.append("-")
+		print("Miss: {0}".format(val))
 
 ########################################
 #
