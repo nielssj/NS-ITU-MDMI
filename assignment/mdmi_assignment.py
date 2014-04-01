@@ -158,7 +158,7 @@ def frequentPattern():
 		if(len(row) > 0):
 			setLang.append(row)
 
-	result = apriori.apriori(setLang, 0.2)
+	result = apriori.apriori(setLang, 0.5)
 	print("\nLanguage frequencies: {0}".format(langfreqc))
 	print("Frequent Patterns: {0}".format(result))
 
@@ -207,11 +207,11 @@ def clustering():
 
 ###################################
 #
-#	UNSUPERVISED LEARNING (ID3)
+#	CLASSIFICATION (ID3)
 #
 ###################################
 
-def unsupervised():
+def classification():
 	# Create concept hierachy for programming skill
 	prog_ch = []
 	for val in prog:
@@ -245,6 +245,6 @@ def unsupervised():
 
 
 
-#frequentPattern()
-#clustering()
-unsupervised();
+frequentPattern()
+clustering()
+classification();
