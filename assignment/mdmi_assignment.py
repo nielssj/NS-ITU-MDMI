@@ -20,7 +20,6 @@ reader = csv.reader(f_in, delimiter=';')
 
 header = reader.next()
 header[0] = header[0].lstrip("\xef\xbb\xbf") # Strip BOM
-print(header)
 
 columns = dict()
 for row in reader:
@@ -42,7 +41,7 @@ for row in reader:
 # Clean the OS column
 oss = []
 for val in columns["OS"]:
-	if(re.search("win", val, re.IGNORECASE) != None):
+	if(re.search("win", val, re.IGNORECASE)):
 		oss.append("win")
 	elif(re.search("linux|debian|ubuntu", val, re.IGNORECASE)):
 		oss.append("linux")
@@ -204,5 +203,18 @@ def clustering():
 	plt.show()
 
 
-frequentPattern()
+
+###################################
+#
+#	UNSUPERVISED LEARNING (ID3)
+#
+###################################
+
+def unsupervised():
+	print("hello!")
+
+
+
+#frequentPattern()
 #clustering()
+unsupervised();
