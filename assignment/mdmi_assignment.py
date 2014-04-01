@@ -109,7 +109,6 @@ for val in columns["sql"]:
 		knowsql.append(False)
 	else:
 		knowsql.append("-")
-		print("Miss: {0}".format(val))
 
 ########################################
 #
