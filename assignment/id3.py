@@ -116,9 +116,48 @@ def generateDecisionTree(data, cl):
 # Classify one or more records
 def classify(rcs, cl, root):
 	res = dict()
+	print(rcs)
 	for i in range(0, len(rcs[root.label])):
 		n_cur = root
 		while(len(n_cur.children) > 0):
 			n_cur = n_cur.children[rcs[n_cur.label][i]]
 		res[i] = n_cur.label
 	return res
+
+# Run test run with given test- and training set
+def testRun(train, test, cl):
+	results = []
+	tree = generateDecisionTree(train, cl)
+	predictions = classify(test, cl, tree)
+	for i, val in test.iterrows():
+		prediction = prediction[i]
+		actual = val[cl]
+		results.append((val["class"],prediction))
+		print("Prediction: {0} (actual: {1})".format(prediction, actual))
+	return results
+
+# Conduct test using holdout method (single partition split into training/test data)
+def holdoutTest(data, split, cl):
+	rcs = pandas.DataFrame.from_dict(data)
+	test_i = numpy.random.choice(rcs.index, split, replace=False)
+	test = rcs.ix[test_i]		# Use T random records for test
+	train = rcs.drop(test_i)	# Use the rest for training
+	return testRun(train, test, cl)
+
+# Conduct test using cross-validation method  (Randomly partition and rotate which one is test set)
+def crossValidation(data, p, cl):
+	# Divide into random partitions
+	parts = []
+	rs = len(data)/p
+	for i in range(0, p):
+		ri = numpy.random.choice(data.index, size=rs, replace=False)
+		parts.append(data.ix[ri])
+		data = data.drop(ri)
+	# Perform test rotating which partition is the test set
+	results = []
+	for i, part in enumerate(parts):
+		train = pandas.concat(parts[:i] + parts[(i+1):])
+		test = parts[i]
+		p_results = testRun(train, test, k)
+		results.append(p_results)
+	return numpy.concatenate(results)
